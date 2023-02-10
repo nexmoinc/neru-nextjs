@@ -1,4 +1,4 @@
-import { addKey, getKey } from '@/models/keys';
+import { addKey, keyExists } from '@/models/keys';
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 export default async function userHandler(
@@ -6,6 +6,7 @@ export default async function userHandler(
     res: NextApiResponse
 ) {
     const { method, query } = req;
+    const today = new Date().toISOString().slice(0, 10);
 
     const key: string = query.key as string;
 
@@ -15,18 +16,13 @@ export default async function userHandler(
 
     switch (method) {
         case 'POST':
-            await addKey(key)
-            res.status(200).json({ result: 'OK' })
-            break
-        case 'GET':
-            const result = await getKey(key);
-
-            if (!result) {
-                return res.status(404).json({ error: 'key not found' })
+            if (await keyExists(key)) {
+                return res.status(400).json({ error: `key:${key} already exists` })
             }
 
-            return res.status(200).json({ result: JSON.parse(result) })
-
+            await addKey(key, today);
+            res.status(200).json({ result: 'OK' })
+            break
         default:
             res.setHeader('Allow', ['POST'])
             res.status(405).end(`Method ${method} Not Allowed`)

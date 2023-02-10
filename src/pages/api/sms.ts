@@ -1,7 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { hasQuota, incrementQuota } from '@/models/quota'
-import { getKey } from '@/models/keys';
+import { keyExists } from '@/models/keys';
 
 export default async function handler(
   req: NextApiRequest,
@@ -37,7 +37,7 @@ export default async function handler(
 
   switch (method) {
     case 'POST':
-      if (!await getKey(api_key)) {
+      if (!await keyExists(api_key)) {
         return res.status(404).json({ error: `api_key:${api_key} not found` })
       }
 
@@ -45,15 +45,15 @@ export default async function handler(
         return res.status(403).json({ error: `quota for key:${api_key} for date:${today} has been exceeded` })
       }
 
-      // await fetch("https://rest.nexmo.com/sms/json", {
-      //   "method": "POST",
-      //   "headers": {
-      //     'Content-Type': 'application/json'
-      //   },
-      //   body: JSON.stringify({ from, to, api_key, api_secret, text })
-      // });
+      await fetch("https://rest.nexmo.com/sms/json", {
+        "method": "POST",
+        "headers": {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ from, to, api_key, api_secret, text })
+      });
 
-      // incrementQuota(api_key, today);
+      incrementQuota(api_key, today);
 
       res.status(200).json({ result: 'OK' })
       break

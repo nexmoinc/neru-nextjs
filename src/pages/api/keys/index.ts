@@ -6,6 +6,14 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<any>
 ) {
-  const keys = await getKeys();
-  res.status(200).json({data: keys})
+  const { method } = req;
+
+  switch (method) {
+    case 'GET':
+      const keys = await getKeys();
+      return res.status(200).json({ result: keys })
+    default:
+      res.setHeader('Allow', ['GET'])
+      return res.status(405).end(`Method ${method} Not Allowed`)
+  }
 }

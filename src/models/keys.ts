@@ -1,15 +1,29 @@
 import { globalState } from '@/models/state';
 import { KEYS_TABLE } from '@/models/constants';
 
-export async function addKey(apiKey: string): Promise<void> {
-    await globalState.hset(KEYS_TABLE, {
-        [apiKey]: 'true'
-    });
+    export async function addKey(apiKey: string, today: string): Promise<void> {
+        await globalState.hset(KEYS_TABLE, {
+            [`${apiKey}.${today}.quota`]: "0",
+            [`${apiKey}.${today}.used`]: "0",
+        });
 }
 
-export async function getKey(apiKey: string): Promise<string> {
-    const key = await globalState.hget(KEYS_TABLE, apiKey);
-    return key;
+export async function keyExists(apiKey: string): Promise<boolean> {
+    async function scan(cursor: string, pattern: string, count: number): Promise<[string, string[]]> {
+        return await globalState.hscan(KEYS_TABLE, cursor, pattern, count);
+    }
+
+    let cursor = '0';
+
+    do {
+        const [newCursor, keys] = await scan(cursor, `${apiKey}*`, 1);
+        if (keys.length > 0) {
+            return true;
+        }
+        cursor = newCursor;
+    } while (cursor !== '0');
+
+    return false;
 }
 
 export async function removeKey(apiKey: string): Promise<void> {
