@@ -2,6 +2,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { hasQuota, incrementQuota } from '@/models/quota'
 import { keyExists } from '@/models/keys';
+import { getProxyURL } from '@/models/proxy';
 
 export default async function handler(
   req: NextApiRequest,
@@ -45,7 +46,9 @@ export default async function handler(
         return res.status(403).json({ error: `quota for key:${api_key} for date:${today} has been exceeded` })
       }
 
-      await fetch("https://rest.nexmo.com/sms/json", {
+      const proxy_url: string = await getProxyURL();
+
+      await fetch(proxy_url, {
         "method": "POST",
         "headers": {
           'Content-Type': 'application/json'

@@ -30,6 +30,11 @@ export async function removeKey(apiKey: string): Promise<void> {
     await globalState.hdel(KEYS_TABLE, apiKey);
 }
 
+export async function deleteKeys(): Promise<void> {
+    await globalState.delete(KEYS_TABLE);
+}
+
+
 export async function getKeys(): Promise<any> {
     const keys = await globalState.hgetall(KEYS_TABLE);
     const filteredKeys: { [key: string]: string } = Object.entries(keys)
