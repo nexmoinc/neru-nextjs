@@ -89,7 +89,7 @@ export const QuotasTable = ({ columns, data, updateQuota }: TableProps) => {
         value ?? "-"
       );
     },
-  };
+  } as any; // TODO: no-no
 
   const { getTableProps, getTableBodyProps, headerGroups, prepareRow, page } =
     useTable(

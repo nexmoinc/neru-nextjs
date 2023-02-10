@@ -6,8 +6,8 @@ instance:
   region: aws.euw1
   application-id: 01e6f0b7-16f1-45cc-9069-e4b8eb912dac
   entrypoint:
-    - node
-    - index.js
+    - npm
+    - start
 debug:
   name: neru-nextjs-debug
   entrypoint:
