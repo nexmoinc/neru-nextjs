@@ -16,7 +16,7 @@ export async function keyExists(apiKey: string): Promise<boolean> {
     let cursor = '0';
 
     do {
-        const [newCursor, keys] = await scan(cursor, `${apiKey}*`, 1);
+        const [newCursor, keys] = await scan(cursor, `${apiKey}.*`, 1);
         if (keys.length > 0) {
             return true;
         }
