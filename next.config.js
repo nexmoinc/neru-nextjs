@@ -4,15 +4,18 @@ const nextConfig = {
   async rewrites() {
     return [
       {
-        source: '/sms/json',
-        destination: '/api/sms',
+        source: "/sms/json",
+        destination: "/api/sms",
       },
       {
-        source: '/_/health',
-        destination: '/api/health',
-      }
-    ]
+        source: "/_/health",
+        destination: "/api/health",
+      },
+    ];
   },
-}
+  compiler: {
+    styledComponents: true,
+  },
+};
 
 module.exports = nextConfig
