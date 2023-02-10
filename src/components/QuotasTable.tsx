@@ -7,6 +7,7 @@ import {
   TableInstance,
   usePagination,
   UsePaginationInstanceProps,
+  UsePaginationState,
   useTable,
 } from "react-table";
 import styled from "styled-components";
@@ -23,9 +24,6 @@ interface TableProps {
   data: any;
   updateQuota: (APIKey: string, date: string, quota: number) => void;
 }
-
-export type TableInstanceWithHooks<T extends object> = TableInstance<T> &
-  UsePaginationInstanceProps<T>;
 
 const Wrapper = styled.div`
   width: 100%;
@@ -97,10 +95,11 @@ export const QuotasTable = ({ columns, data, updateQuota }: TableProps) => {
         columns,
         data,
         defaultColumn,
+        initialState: { pageSize: 100 },
       },
       usePagination,
       useSticky
-    ) as TableInstanceWithHooks<any>;
+    );
 
   const renderHeaderGroup = (headerGroup: HeaderGroup) =>
     headerGroup.headers.map((column) => {
