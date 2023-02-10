@@ -7,8 +7,7 @@ instance:
   application-id: 1016e212-2da5-4239-b4f5-7233804fec00
   entrypoint:
     - npm
-    - run
-    - build:start
+    - start
 debug:
   name: neru-nextjs-debug
   entrypoint:
