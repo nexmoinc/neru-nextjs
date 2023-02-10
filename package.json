@@ -15,7 +15,7 @@
     "@types/react-dom": "18.0.10",
     "bootstrap": "^5.2.3",
     "lodash": "^4.17.21",
-    "neru-alpha": "^3.5.1",
+    "neru-alpha": "file:./neru-alpha-3.5.1.tgz",
     "next": "13.1.6",
     "react": "18.2.0",
     "react-bootstrap": "^2.7.0",
