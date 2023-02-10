@@ -65,7 +65,10 @@ export const QuotasTable = ({ columns, data, updateQuota }: TableProps) => {
       const [value, setValue] = useState(initialValue);
 
       const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setValue(parseInt(e.currentTarget.value, 10) || 0);
+        const newValue = parseInt(e.currentTarget.value, 10) || 0;
+        if (value !== newValue) {
+          setValue(newValue);
+        }
       };
 
       const onBlur = () => {

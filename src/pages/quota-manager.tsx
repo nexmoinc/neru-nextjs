@@ -73,7 +73,7 @@ const QuotaManager = () => {
   if (error) return <div>Failed to load</div>;
   if (!response) return <div>Loading...</div>;
 
-  const { columns, data } = convertData(response.data);
+  const { columns, data } = convertData(response.result);
 
   return (
     <Container>
