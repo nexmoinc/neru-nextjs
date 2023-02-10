@@ -1,0 +1,16 @@
+project:
+    name: neru-nextjs
+instance:
+    name: dev
+    runtime: nodejs16
+    region: aws.euw1
+    application-id: 1016e212-2da5-4239-b4f5-7233804fec00
+    entrypoint:
+        - node
+        - index.js
+debug:
+    name: neru-nextjs-debug
+    entrypoint:
+        - npm
+        - run
+        - dev
