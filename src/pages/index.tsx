@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { QuotasTable } from "../components/QuotasTable";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Button from "react-bootstrap/Button";
@@ -28,22 +28,69 @@ const AppURL = () => {
 
   return data ? (
     <Row>
-      <Col sm={2}>API Url:</Col>
-      <Col>
-        <a href={data.result}>{data.result}</a>
+      <Col sm={2}>
+        <strong>API Url</strong>:
+      </Col>
+      <Col sm={10}>
+        <a style={{ marginLeft: "1.5rem" }} href={data.result}>
+          {data.result}
+        </a>
       </Col>
     </Row>
   ) : null;
 };
 
 const ProxyURL = () => {
-  const { data } = useSWR("/api/app/proxy", fetcher);
+  const { data, mutate } = useSWR("/api/app/proxy", fetcher);
+  const [mark, setMark] = useState("☑️");
+
+  const [value, setValue] = useState("");
+
+  const updateProxy = async (url: string) => {
+    await fetcher("/api/app/proxy", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        url,
+      }),
+    });
+
+    mutate();
+    setMark("☑️");
+  };
+
+  useEffect(() => {
+    if (data?.result) {
+      setValue(data.result);
+    }
+  }, [data?.result]);
+
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setMark("✎");
+    setValue(e.currentTarget.value);
+  };
+
+  const onBlur = () => {
+    if (value !== data.result) {
+      updateProxy(value);
+    }
+  };
 
   return data ? (
-    <Row>
-      <Col sm={2}>Proxy Url:</Col>
-      <Col>
-        <a href={data.result}>{data.result}</a>
+    <Row className="mt-2">
+      <Col sm={2}>
+        <strong>Proxy Url</strong>:
+      </Col>
+      <Col sm={10}>
+        <Row>
+          {mark}
+          <input
+            style={{ border: "none", width: "90%", marginLeft: "0.5rem" }}
+            value={value}
+            onChange={onChange}
+            onBlur={onBlur}
+          />
+        </Row>
       </Col>
     </Row>
   ) : null;
