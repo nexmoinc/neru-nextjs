@@ -23,6 +23,32 @@ const saveQuota = async (APIKey: string, date: string, quota: number) =>
     }),
   });
 
+const AppURL = () => {
+  const { data } = useSWR("/api/app/url", fetcher);
+
+  return data ? (
+    <Row>
+      <Col sm={2}>API Url:</Col>
+      <Col>
+        <a href={data.result}>{data.result}</a>
+      </Col>
+    </Row>
+  ) : null;
+};
+
+const ProxyURL = () => {
+  const { data } = useSWR("/api/app/proxy", fetcher);
+
+  return data ? (
+    <Row>
+      <Col sm={2}>Proxy Url:</Col>
+      <Col>
+        <a href={data.result}>{data.result}</a>
+      </Col>
+    </Row>
+  ) : null;
+};
+
 const QuotaManager = () => {
   const [message, setMessage] = useState<{
     text: string;
@@ -91,6 +117,15 @@ const QuotaManager = () => {
 
   return (
     <Container>
+      <Row className="mt-5">
+        <h3>SMS Quota Manager</h3>
+      </Row>
+      <Row className="mt-3">
+        <AppURL />
+      </Row>
+      <Row>
+        <ProxyURL />
+      </Row>
       <Row className="mt-5 mb-3">
         <Col sm={4} className="ms-auto text-end">
           <Button variant="primary" onClick={() => setShowAddDateModal(true)}>
