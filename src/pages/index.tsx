@@ -112,15 +112,15 @@ const QuotaManager = () => {
         method: "POST",
       });
 
-      if (response?.ok) {
+      if (response?.error) {
+        throw new Error(response.error);
+      } else {
         mutate();
         setShowAddClientModal(false);
         setMessage({
           text: `New client API added: <strong>${APIKey}</strong>`,
           type: "success",
         });
-      } else {
-        throw new Error(response.error);
       }
     } catch (error: unknown) {
       let message = "Could not add client API.";
