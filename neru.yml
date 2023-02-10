@@ -4,10 +4,11 @@ instance:
   name: dev
   runtime: nodejs16
   region: aws.euw1
-  application-id: 01e6f0b7-16f1-45cc-9069-e4b8eb912dac
+  application-id: 1016e212-2da5-4239-b4f5-7233804fec00
   entrypoint:
     - npm
-    - start
+    - run
+    - build:start
 debug:
   name: neru-nextjs-debug
   entrypoint:
