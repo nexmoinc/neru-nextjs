@@ -3,6 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { hasQuota, incrementQuota } from '@/models/quota'
 import { keyExists } from '@/models/keys';
 import { getProxyURL } from '@/models/proxy';
+import moment from 'moment-timezone';
 
 export default async function handler(
   req: NextApiRequest,
@@ -10,7 +11,8 @@ export default async function handler(
 ) {
   const { method, body } = req;
   const { from, text, to, api_key, api_secret } = body;
-  const today = new Date().toISOString().slice(0, 10);
+  const todayInHongKong = moment().tz('Asia/Hong_Kong').format('YYYY-MM-DD');
+  
 
   if (!from) {
     return res.status(400).json({ error: 'body.from not found' })
@@ -42,8 +44,8 @@ export default async function handler(
         return res.status(404).json({ error: `api_key:${api_key} not found` })
       }
 
-      if (!await hasQuota(api_key, today)) {
-        return res.status(403).json({ error: `quota for key:${api_key} for date:${today} has been exceeded` })
+      if (!await hasQuota(api_key, todayInHongKong)) {
+        return res.status(403).json({ error: `quota for key:${api_key} for date:${todayInHongKong} has been exceeded` })
       }
 
       const proxy_url: string = await getProxyURL();
@@ -56,7 +58,7 @@ export default async function handler(
         body: JSON.stringify({ from, to, api_key, api_secret, text })
       });
 
-      incrementQuota(api_key, today);
+      incrementQuota(api_key, todayInHongKong);
 
       res.status(200).json({ result: 'OK' })
       break
