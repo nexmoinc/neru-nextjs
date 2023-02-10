@@ -26,24 +26,38 @@ const saveQuota = async (APIKey: string, date: string, quota: number) =>
 const QuotaManager = () => {
   const [message, setMessage] = useState<{
     text: string;
-    type: "success" | "warning";
+    type: "success" | "warning" | "danger";
   } | null>();
   const [showAddDateModal, setShowAddDateModal] = useState(false);
   const [showAddClientModal, setShowAddClientModal] = useState(false);
   const { data: response, error, mutate } = useSWR("/api/keys", fetcher);
 
   const handleAddClient = async (APIKey: string) => {
-    await fetcher(`/api/keys/${APIKey}`, {
-      headers: { "Content-Type": "application/json" },
-      method: "POST",
-    });
+    try {
+      const response = await fetcher(`/api/keys/${APIKey}`, {
+        headers: { "Content-Type": "application/json" },
+        method: "POST",
+      });
 
-    mutate();
-    setShowAddClientModal(false);
-    setMessage({
-      text: `New client API added: <strong>${APIKey}</strong>`,
-      type: "success",
-    });
+      if (response?.ok) {
+        mutate();
+        setShowAddClientModal(false);
+        setMessage({
+          text: `New client API added: <strong>${APIKey}</strong>`,
+          type: "success",
+        });
+      } else {
+        throw new Error(response.error);
+      }
+    } catch (error: unknown) {
+      let message = "Could not add client API.";
+      if (error instanceof Error) message += ` ${error.message}`;
+
+      setMessage({
+        text: message,
+        type: "danger",
+      });
+    }
   };
 
   const handleAddDate = async (APIKey: string, date: string, quota: number) => {
@@ -80,7 +94,7 @@ const QuotaManager = () => {
       <Row className="mt-5 mb-3">
         <Col sm={4} className="ms-auto text-end">
           <Button variant="primary" onClick={() => setShowAddDateModal(true)}>
-            Add day
+            Add quota
           </Button>
         </Col>
       </Row>

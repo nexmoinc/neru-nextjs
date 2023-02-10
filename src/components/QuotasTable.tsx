@@ -65,14 +65,13 @@ export const QuotasTable = ({ columns, data, updateQuota }: TableProps) => {
       const [value, setValue] = useState(initialValue);
 
       const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const newValue = parseInt(e.currentTarget.value, 10) || 0;
-        if (value !== newValue) {
-          setValue(newValue);
-        }
+        setValue(parseInt(e.currentTarget.value, 10) || 0);
       };
 
       const onBlur = () => {
-        updateQuota(original.api_key, parent.id, value);
+        if (value !== initialValue) {
+          updateQuota(original.api_key, parent.id, value);
+        }
       };
 
       useEffect(() => {

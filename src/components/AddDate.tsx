@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
@@ -22,11 +22,15 @@ export const AddDate = ({
   const [date, setDate] = useState("");
   const [quota, setQuota] = useState(0);
 
-  const onClose = () => {
+  const cleanState = () => {
     setAlerts([]);
     setAPIKey("");
     setDate("");
     setQuota(0);
+  };
+
+  const onClose = () => {
+    cleanState();
     handleClose();
   };
 
@@ -48,14 +52,15 @@ export const AddDate = ({
     if (errorMessages.length) {
       setAlerts(errorMessages);
     } else {
+      cleanState();
       handleSave(APIKey, date, quota);
     }
   };
 
   return (
-    <Modal show={show} onHide={handleClose}>
+    <Modal show={show} onHide={onClose}>
       <Modal.Header closeButton>
-        <Modal.Title>New date</Modal.Title>
+        <Modal.Title>Add Quota</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         {alerts.length > 0 && (
@@ -74,9 +79,13 @@ export const AddDate = ({
                 setAPIKey(e.currentTarget.value)
               }
             >
-              <option key="">Choose Client API key</option>
+              <option key="" value="">
+                Choose Client API key
+              </option>
               {apiKeys.map((key) => (
-                <option key={key}>{key}</option>
+                <option key={key} value={key}>
+                  {key}
+                </option>
               ))}
             </Form.Select>
           </Form.Group>
