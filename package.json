@@ -18,7 +18,7 @@
     "lodash": "^4.17.21",
     "moment-timezone": "^0.5.40",
     "neru-alpha": "file:./neru-alpha-3.5.1.tgz",
-    "next": "13.1.6",
+    "next": "13.5.4",
     "react": "18.2.0",
     "react-bootstrap": "^2.7.0",
     "react-dom": "18.2.0",
